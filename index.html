@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘伟豪 - 个人简历作品集</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons (替换了需要环境依赖的 Lucide 图标) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel (用于在浏览器中直接解析 JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body { margin: 0; padding: 0; background-color: black; }
+        /* 优化内嵌滚动条样式 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+    </style>
+</head>
+<body class="bg-black text-zinc-100 min-h-screen font-sans selection:bg-zinc-800 selection:text-white">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // ==========================================
+        // 数据配置区
+        // ==========================================
+        const PERSONAL_INFO = {
+          name: "刘伟豪",
+          title: "光电信息科学与工程 / 计算机视觉探索者",
+          subtitle: "致力于通过人工智能与机器视觉解决智慧农业与精密制造中的实际问题。",
+          age: 21,
+          phone: "18792632383",
+          email: "Iwh1106@foxmail.com",
+          politics: "中共预备党员",
+          location: "陕西西安"
+        };
+
+        const EDUCATION = [
+          {
+            school: "华中农业大学",
+            degree: "光电信息科学与工程 | 本科",
+            period: "2023.09 - 2027.06",
+            details: [
+              "综绩排名: 11/67 | GPA: 3.45/4.0",
+              "英语水平: CET-4、CET-6",
+              "荣誉奖项: 国家励志奖学金(连续两年)、三好学生(连续两年)、优秀团员、多次获评优秀学生工作先进个人",
+              "学生工作: 学院党建宣传部部长、班级生活委员"
+            ]
+          },
+          {
+            school: "中国地质大学",
+            degree: "计算机科学 | 辅修",
+            period: "2024.06 - 2026.06",
+            details: [
+              "补充计算机底层逻辑与软件开发基础",
+              "掌握一站式前后端设计与开发能力"
+            ]
+          }
+        ];
+
+        const PROJECTS = [
+          {
+            id: 1,
+            title: "基于多维特征联合感知的香菇分级分类方法",
+            role: "学生一作",
+            period: "2025.11 - 2026.05",
+            shortDesc: "提出一种基于改进YOLOv12n的香菇品质分级方法，平均精度达90.6%。",
+            tags: ["YOLOv12n", "计算机视觉", "动态蛇形卷积", "智慧农业"],
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <div 
+                  onClick={() => onPreview({ type: 'image', title: 'DCA-YOLOv12n 网络结构图', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/DCA-YOLOv12n%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%9B%BE.jpg' })}
+                  className="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl bg-zinc-900 border border-zinc-800/80 flex items-center justify-center overflow-hidden mb-8 relative group cursor-pointer shadow-lg"
+                >
+                  <img src="https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/DCA-YOLOv12n%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt="DCA-YOLOv12n网络结构图" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                    <span className="flex items-center gap-2 bg-black/70 text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 backdrop-blur-md">
+                      <i className="fa-solid fa-eye"></i> 点击放大预览
+                    </span>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目背景与挑战</h3>
+                <p className="leading-relaxed">
+                  针对香菇表面裂纹形态复杂、茶花菇与白花菇易混淆、相邻等级边界模糊等难题，传统的分拣方式高度依赖人工，不仅效率低下，且主观性强导致分类标准不统一。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-microchip text-3xl text-blue-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">核心算法创新</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      引入<strong className="text-white">动态蛇形卷积</strong>增强对细长裂纹特征的提取，嵌入CBAM注意力模块强化色彩对比，并设计自适应分级检测头实现裂纹密度的精细分级。
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-database text-3xl text-purple-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">性能与表现</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      试验显示，改进模型在复杂场景下的<strong className="text-white">平均精度达90.6%</strong>，为食用菌智能分选装备研发提供了轻量化、高精度的技术方案。
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目成果</h3>
+                <ul className="list-disc pl-5 space-y-2 text-zinc-400">
+                  <li>论文已被 <strong className="text-white">EI源刊《农业机械学报》</strong> (IF=3.166，农业工程学科居首位) 收录 (第一作者)。</li>
+                  <li>算法已封装并在试验性智能分选装备中部署验证。</li>
+                </ul>
+              </div>
+            )
+          },
+          {
+            id: 2,
+            title: "基于改进YOLOv12n算法的玉米籽粒类型识别方法",
+            role: "学生二作 | 第三个发明人",
+            period: "2025.05 - 2025.10",
+            shortDesc: "设计改进型PDA-YOLOv12n模型与自动考种装备，准确率提升至91.53%。",
+            tags: ["PDA-YOLOv12n", "硬件设计", "目标检测"],
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <div 
+                  onClick={() => onPreview({ type: 'image', title: '玉米分类网络架构图', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E7%8E%89%E7%B1%B3%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg' })}
+                  className="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl bg-zinc-900 border border-zinc-800/80 flex items-center justify-center overflow-hidden mb-8 relative group cursor-pointer shadow-lg"
+                >
+                  <img src="https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E7%8E%89%E7%B1%B3%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg" alt="玉米分类网络架构图" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                    <span className="flex items-center gap-2 bg-black/70 text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 backdrop-blur-md">
+                      <i className="fa-solid fa-eye"></i> 点击放大预览
+                    </span>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目背景</h3>
+                <p className="leading-relaxed">
+                  本项目针对相邻类型之间玉米籽粒缺陷程度差异不明显、人工分类的主观性强导致鉴定结果准确率受限的问题，亟需一种自动化的考种与分类方案。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-microchip text-3xl text-blue-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">软硬协同创新</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      创新性地设计了一种玉米考种设备硬件，并同步设计了改进的 <strong className="text-white">PDA-YOLOv12n</strong> 模型，实现高效的端到端识别。
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-eye text-3xl text-green-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">测试结果提升</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      测试结果表明识别准确率达到<strong className="text-white">91.53%</strong>，相比于原模型提高了5.22个百分点，能够完美代替人工精准分类。
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目成果</h3>
+                <ul className="list-disc pl-5 space-y-2 text-zinc-400">
+                  <li>论文已被 <strong className="text-white">EI源刊《农业机械学报》</strong> 收录 (第二作者)。</li>
+                  <li>申请国家发明专利 1 项 (第三发明人)。</li>
+                </ul>
+              </div>
+            )
+          },
+          {
+            id: 3,
+            title: "基于可解释多任务机器学习的香菇生长精准预测模型",
+            role: "学生一作",
+            period: "2025.10 - 至今",
+            shortDesc: "融合三维克里金插值与SHAP分析，构建高精度强泛化的生长预测模型。",
+            tags: ["机器学习", "SHAP可解释性", "传感器融合"],
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <div 
+                  onClick={() => onPreview({ type: 'image', title: '空间场分布图', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E7%A9%BA%E9%97%B4%E5%9C%BA%E5%88%86%E5%B8%83png.png' })}
+                  className="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl bg-zinc-900 border border-zinc-800/80 flex items-center justify-center overflow-hidden mb-8 relative group cursor-pointer shadow-lg"
+                >
+                  <img src="https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E7%A9%BA%E9%97%B4%E5%9C%BA%E5%88%86%E5%B8%83png.png" alt="空间场分布图" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                    <span className="flex items-center gap-2 bg-black/70 text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 backdrop-blur-md">
+                      <i className="fa-solid fa-eye"></i> 点击放大预览
+                    </span>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目背景</h3>
+                <p className="leading-relaxed">
+                  针对层架式香菇大棚温度场时空异质性显著、传统模型难以耦合多环境因子、机器学习预测呈现“黑箱”不可解释等难题，构建了高频环境监测与表型测量系统。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-database text-3xl text-blue-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">空间建模与优化</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      融合<strong className="text-white">三维克里金插值与皮尔逊相关系数</strong>实现大棚内部传感器网络点位优化。
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-microchip text-3xl text-indigo-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">可解释性机器算法</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      采用随机森林-改进贝叶斯优化算法捕捉非线性规律，并结合 <strong className="text-white">SHAP 可解释分析</strong>量化各环境因子的贡献度。
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目成果</h3>
+                <ul className="list-disc pl-5 space-y-2 text-zinc-400">
+                  <li>相关学术论文正在 <strong className="text-white">SCI一区期刊《Computers and Electronics in Agriculture》</strong> 投稿审稿中。</li>
+                </ul>
+              </div>
+            )
+          },
+          {
+            id: 4,
+            title: "物联网水肥一体化智慧灌溉装备研发",
+            role: "省级大创 | 负责人",
+            period: "2025.05 - 2026.09",
+            shortDesc: "集成传感器与专家决策模型，实现柑橘园水肥精准自动化管理。",
+            tags: ["物联网", "嵌入式硬件", "智能决策"],
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <div 
+                  onClick={() => onPreview({ type: 'image', title: '智慧灌溉装备图', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E6%99%BA%E6%85%A7%E7%81%8C%E6%BA%891.png' })}
+                  className="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl bg-zinc-900 border border-zinc-800/80 flex items-center justify-center overflow-hidden mb-8 relative group cursor-pointer shadow-lg"
+                >
+                  <img src="https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E6%99%BA%E6%85%A7%E7%81%8C%E6%BA%891.png" alt="智慧灌溉装备图" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                    <span className="flex items-center gap-2 bg-black/70 text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 backdrop-blur-md">
+                      <i className="fa-solid fa-eye"></i> 点击放大预览
+                    </span>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目背景</h3>
+                <p className="leading-relaxed">
+                  针对传统柑橘园水肥管理粗放、资源利用率低、劳动强度大等问题，设计并开发了一种基于柑橘生长需求的智能水肥一体机。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-database text-3xl text-blue-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">多源数据融合</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      系统集成土壤湿度、养分传感器及环境监测模块，实时感知柑橘根区墒情，确保数据采集的实时性与准确性。
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-code text-3xl text-purple-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">专家决策与自动化</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      核心控制器内置专家决策模型，自动计算并精准控制灌溉量与肥料配比，实现水肥溶液的自动混合、按需输送与小程序远程管理。
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目成果</h3>
+                <ul className="list-disc pl-5 space-y-2 text-zinc-400">
+                  <li>已申请 <strong className="text-white">1 项国家发明专利</strong> (第二作者)。</li>
+                  <li>获批 1 项软件著作权，项目成功立项省级大学生创新创业训练计划。</li>
+                </ul>
+              </div>
+            )
+          },
+          {
+            id: 5,
+            title: "基于图像处理的Micro-LED晶圆自动对焦技术应用",
+            role: "国家级大创 | 成员",
+            period: "2024.05 - 2025.12",
+            shortDesc: "采用被动式离焦深度法与梯度算子，实现Micro-LED显微图像精准自动对焦。",
+            tags: ["图像处理", "自动对焦", "算法优化"],
+            richDetails: (
+              <div className="space-y-6 text-gray-300">
+                <div className="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl bg-gradient-to-tr from-zinc-800 to-zinc-700 flex items-center justify-center overflow-hidden mb-8 relative group">
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500"></div>
+                  <p className="text-zinc-400 font-medium tracking-widest">[ 待补充配图 ]</p>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目背景</h3>
+                <p className="leading-relaxed">
+                  针对Micro-LED晶圆芯粒尺寸小、人工对焦效率低、影响成品检测与制备进度的难题，提出一种基于图像处理的精准自动对焦方法。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-crosshairs text-3xl text-blue-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">算子与策略优化</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      设计<strong className="text-white">八邻域四方向最大二阶梯度算子</strong>构建清晰度评价函数，结合全局函数拟合与<strong className="text-white">盲人爬山法</strong>优化寻优策略，解决局部极值问题。
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-eye text-3xl text-teal-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">性能提升</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      相较于传统方法，在清晰度比率、灵敏度因子等性能上均有显著提升，有效实现微观显微图像的快速、精准对焦。
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目成果</h3>
+                <ul className="list-disc pl-5 space-y-2 text-zinc-400">
+                  <li>申请 <strong className="text-white">国家发明专利 1 项</strong>。</li>
+                  <li>申请软件著作权 1 项，入选国家级大学生创新创业训练计划。</li>
+                </ul>
+              </div>
+            )
+          },
+          {
+            id: 6,
+            title: "面向食用菌栽培的高光谱三维重建菌棒理化指标检测",
+            role: "负责人",
+            period: "2026.02 - 至今",
+            shortDesc: "基于360°旋转高光谱成像与三维高斯重建，生成成分3D空间分布云图。",
+            tags: ["三维高斯重建", "高光谱成像", "无损检测"],
+            richDetails: (
+              <div className="space-y-6 text-gray-300">
+                <div className="aspect-[16/9] sm:aspect-[21/9] w-full rounded-2xl bg-gradient-to-tr from-zinc-800 to-zinc-700 flex items-center justify-center overflow-hidden mb-8 relative group">
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500"></div>
+                  <p className="text-zinc-400 font-medium tracking-widest">[ 待补充配图 ]</p>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目背景</h3>
+                <p className="leading-relaxed">
+                  针对菌棒理化指标检测依赖破坏性手段、传统检测无法实现空间分布可视化、高光谱与三维重建融合难度大等前沿难题提出创新解决方案。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-eye text-3xl text-blue-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">多维数据采集</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      提出一种基于360°旋转高光谱成像结合三维高斯重建的菌棒成分分析方法，并自主搭建了高精度同步采集硬件平台。
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
+                    <i className="fa-solid fa-code text-3xl text-pink-400 mb-4 block"></i>
+                    <h4 className="text-xl font-semibold text-white mb-2">3D成分可视化</h4>
+                    <p className="text-sm leading-relaxed text-zinc-400">
+                      融合相机位姿估计实现高光谱三维高斯重建属性扩展，最终生成菌棒含水量、蛋白质等成分的 <strong className="text-white">3D空间分布云图</strong>。
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目状态</h3>
+                <ul className="list-disc pl-5 space-y-2 text-zinc-400">
+                  <li><strong className="text-white">项目在研中</strong>：目前正在进行算法攻关与硬件平台的后期调试，旨在为食用菌栽培精准管理提供革命性的技术支撑。</li>
+                </ul>
+              </div>
+            )
+          }
+        ];
+
+        const COMPETITIONS = [
+          {
+            id: 1,
+            name: "2025年全国大学生物理实验(创新)竞赛",
+            award: "全国二等奖 | 队长",
+            period: "2025.07 - 2025.10",
+            desc: "搭建了基于MATLAB的光的夫琅禾费衍射仿真程序平台。程序具备高度交互性，创新添加“瑞利判据”功能，以直观图像与动态演示呈现物理规律。",
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目资料与获奖证明</h3>
+                <p className="leading-relaxed text-sm">
+                  本项目开发了基于MATLAB的光的夫琅禾费衍射仿真程序，通过高度的交互性呈现物理规律。以下为比赛提交的核心物料，点击即可直接在当前窗口在线预览。
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                  <button type="button" onClick={() => onPreview({ type: 'pdf', title: '研究报告 (2025)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/2025%E5%B9%B4%E6%B9%96%E5%8C%97%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%89%A9%E7%90%86%E5%AE%9E%E9%AA%8C%E8%AE%BE%E8%AE%A1%E7%AB%9E%E8%B5%9B%20%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8EMATLAB%E7%9A%84%E5%85%89%E7%9A%84%E5%A4%AB%E7%90%85%E7%A6%BE%E8%B4%B9%E8%A1%8D%E5%B0%84%E4%BB%BF%E7%9C%9F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91.pdf' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-800/80 transition-all group">
+                    <div className="bg-blue-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-file-pdf text-2xl text-blue-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-blue-400 transition-colors flex items-center text-sm">研究报告 (PDF) <i className="fa-solid fa-eye ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">点击直接在线预览设计与原理</div>
+                    </div>
+                  </button>
+
+                  <button type="button" onClick={() => onPreview({ type: 'video', title: '演示视频 (2025)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/2025%E5%B9%B4%E7%AC%AC%E5%8D%81%E4%B8%80%E5%B1%8A%E5%85%A8%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%89%A9%E7%90%86%E5%AE%9E%E9%AA%8C%E8%AE%BE%E8%AE%A1%E7%AB%9E%E8%B5%9B_%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8EMATLAB%E7%9A%84%E5%85%89%E7%9A%84%E5%A4%AB%E7%90%85%E7%A6%BE%E8%B4%B9%E8%A1%8D%E5%B0%84%E4%BB%BF%E7%9C%9F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E8%A7%86%E9%A2%91.mp4' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-purple-500/50 hover:bg-zinc-800/80 transition-all group">
+                    <div className="bg-purple-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-circle-play text-2xl text-purple-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-purple-400 transition-colors flex items-center text-sm">演示视频 (MP4) <i className="fa-regular fa-circle-play ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">点击在线播放实机操作</div>
+                    </div>
+                  </button>
+                  
+                  <button type="button" onClick={() => onPreview({ type: 'image', title: '获奖证书 (2025)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E5%9B%BD%E8%B5%9B-%E8%87%AA%E9%80%89%E7%B1%BB.jpg' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-amber-500/50 hover:bg-zinc-800/80 transition-all group md:col-span-2">
+                    <div className="bg-amber-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-award text-2xl text-amber-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-amber-400 transition-colors flex items-center text-sm">获奖证书 (JPG) <i className="fa-solid fa-eye ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">全国二等奖证书扫描件</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )
+          },
+          {
+            id: 2,
+            name: "2024年全国大学生物理实验(创新)竞赛",
+            award: "全国三等奖 | 队长",
+            period: "2024.07 - 2024.10",
+            desc: "设计制作了一个基于尖端放电原理的电动机教具。通过尖端放电产生的电风与电荷库仑力驱动转子，将无形电场可视化。",
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目资料与获奖证明</h3>
+                <p className="leading-relaxed text-sm">
+                  本项目设计了基于尖端放电原理的电动机教具（旋转的灯笼），成功将电场可视化。以下为项目说明与获奖证明文件，点击即可在线预览。
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                  <button type="button" onClick={() => onPreview({ type: 'pdf', title: '研究报告 (2024)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/2024%E5%B9%B4%E7%AC%AC%E4%B9%9D%E5%B1%8A%E6%B9%96%E5%8C%97%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%89%A9%E7%90%86%E5%AE%9E%E9%AA%8C%E5%88%9B%E6%96%B0%E8%AE%BE%E8%AE%A1%E7%AB%9E%E8%B5%9B%EF%BC%88%E6%97%8B%E8%BD%AC%E7%9A%84%E7%81%AF%E7%AC%BC%E2%80%94%E2%80%94%E5%B0%96%E7%AB%AF%E6%94%BE%E7%94%B5%E7%8E%B0%E8%B1%A1%E7%9A%84%E6%BC%94%E7%A4%BA%EF%BC%89.pdf' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-800/80 transition-all group">
+                    <div className="bg-blue-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-file-pdf text-2xl text-blue-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-blue-400 transition-colors flex items-center text-sm">研究报告 (PDF) <i className="fa-solid fa-eye ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">在线预览旋转灯笼教具设计书</div>
+                    </div>
+                  </button>
+
+                  <button type="button" onClick={() => onPreview({ type: 'video', title: '演示视频 (2024)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%E5%91%BD%E9%A2%98%E7%B1%BB%2BZ3301_%E6%97%8B%E8%BD%AC%E7%9A%84%E7%81%AF%E7%AC%BC%E2%80%94%E2%80%94%E5%B0%96%E7%AB%AF%E6%94%BE%E7%94%B5%E7%8E%B0%E8%B1%A1%E7%9A%84%E6%BC%94%E7%A4%BA%EF%BC%88%E5%8E%8B%E7%BC%A9%E7%89%88%EF%BC%89.mp4' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-purple-500/50 hover:bg-zinc-800/80 transition-all group">
+                    <div className="bg-purple-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-circle-play text-2xl text-purple-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-purple-400 transition-colors flex items-center text-sm">演示视频 (MP4) <i className="fa-regular fa-circle-play ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">在线播放教具实物运行效果</div>
+                    </div>
+                  </button>
+                  
+                  <button type="button" onClick={() => onPreview({ type: 'pdf', title: '获奖证书 (2024)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/%202024%20%E7%AC%AC%E5%8D%81%E5%B1%8A%E5%85%A8%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%89%A9%E7%90%86%E5%AE%9E%E9%AA%8C%E7%AB%9E%E8%B5%9B%E4%B8%89%E7%AD%89%E5%A5%96.pdf' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-amber-500/50 hover:bg-zinc-800/80 transition-all group md:col-span-2">
+                    <div className="bg-amber-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-award text-2xl text-amber-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-amber-400 transition-colors flex items-center text-sm">获奖证书 (PDF) <i className="fa-solid fa-eye ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">在线预览全国三等奖证书</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )
+          },
+          {
+            id: 3,
+            name: "2025年国际智能农业装备大赛",
+            award: "国际特等奖 | 第二成员",
+            period: "2024.10 - 2025.05",
+            desc: "设计基于多图像融合的玉米考种装备。自动输送、脱粒与拍摄，结合改进YOLOv10模型提取玉米多维度性状特征，大幅提高工作效率与准确性。",
+            richDetails: (onPreview) => (
+              <div className="space-y-6 text-gray-300">
+                <h3 className="text-2xl font-bold text-white tracking-tight">项目资料与获奖证明</h3>
+                <p className="leading-relaxed text-sm">
+                  本项目设计了基于多图像融合的玉米考种装备，获得了国际特等奖。相关海报与答辩视频将在后续补充，下方为获奖证书预览。
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                  <button type="button" onClick={() => onPreview({ type: 'pdf', title: '获奖证书 (国际特等奖)', url: 'https://cdn.jsdelivr.net/gh/GeorgeCoke/DCA-yolo-@main/2025%20%E7%AC%AC%E5%8D%81%E5%B1%8A%E5%9B%BD%E9%99%85%E6%99%BA%E8%83%BD%E5%86%9C%E4%B8%9A%E8%A3%85%E5%A4%87%E5%A4%A7%E8%B5%9B%E7%89%B9%E7%AD%89%E5%A5%96.pdf' })} className="flex items-center w-full text-left p-4 bg-zinc-900/80 rounded-2xl border border-zinc-800 hover:border-amber-500/50 hover:bg-zinc-800/80 transition-all group md:col-span-2">
+                    <div className="bg-amber-500/10 p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform">
+                      <i className="fa-solid fa-award text-2xl text-amber-400"></i>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium group-hover:text-amber-400 transition-colors flex items-center text-sm">获奖证书 (PDF) <i className="fa-solid fa-eye ml-2 text-xs"></i></div>
+                      <div className="text-xs text-zinc-500 mt-1">在线预览国际特等奖证书扫描件</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )
+          }
+        ];
+
+        const SKILLS = [
+          { name: "科研工具", desc: "Multisim, MATLAB, Origin, Pycharm", icon: <i className="fa-solid fa-crosshairs text-xl"></i> },
+          { name: "全栈开发", desc: "具备一站式设计前端与后端能力", icon: <i className="fa-solid fa-code text-xl"></i> },
+          { name: "AI与算法", desc: "计算机视觉 (YOLO系列), 三维高斯重建", icon: <i className="fa-solid fa-eye text-xl"></i> },
+          { name: "硬件开发", desc: "熟练掌握嵌入式开发，独立设计嵌入式硬件", icon: <i className="fa-solid fa-microchip text-xl"></i> },
+        ];
+
+        // ==========================================
+        // 辅助动画 Hook
+        // ==========================================
+        function useScrollReveal() {
+          const ref = useRef(null);
+          const [isVisible, setIsVisible] = useState(false);
+
+          useEffect(() => {
+            const observer = new IntersectionObserver(
+              ([entry]) => {
+                if (entry.isIntersecting) {
+                  setIsVisible(true);
+                  observer.unobserve(entry.target);
+                }
+              },
+              { threshold: 0.1 }
+            );
+            if (ref.current) observer.observe(ref.current);
+            return () => observer.disconnect();
+          }, []);
+
+          return [ref, isVisible];
+        }
+
+        const FadeInSection = ({ children, className = "", delay = 0 }) => {
+          const [ref, isVisible] = useScrollReveal();
+          return (
+            <div
+              ref={ref}
+              className={`transition-all duration-1000 ease-out transform ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              } ${className}`}
+              style={{ transitionDelay: `${delay}ms` }}
+            >
+              {children}
+            </div>
+          );
+        };
+
+        // ==========================================
+        // 主组件 App
+        // ==========================================
+        function App() {
+          const [selectedProject, setSelectedProject] = useState(null);
+          const [selectedCompetition, setSelectedCompetition] = useState(null);
+          const [previewFile, setPreviewFile] = useState(null);
+          const [isScrolled, setIsScrolled] = useState(false);
+
+          useEffect(() => {
+            const handleScroll = () => setIsScrolled(window.scrollY > 50);
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+          }, []);
+
+          useEffect(() => {
+            if (selectedProject || selectedCompetition) {
+              document.body.style.overflow = 'hidden';
+            } else {
+              document.body.style.overflow = 'unset';
+            }
+          }, [selectedProject, selectedCompetition]);
+
+          return (
+            <div className="bg-black text-zinc-100 min-h-screen font-sans selection:bg-zinc-800 selection:text-white">
+              
+              {/* 导航条 */}
+              <nav className={`fixed top-0 w-full z-40 transition-all duration-300 border-b ${
+                isScrolled ? 'bg-black/70 backdrop-blur-md border-zinc-800/50 py-3' : 'bg-transparent border-transparent py-5'
+              }`}>
+                <div className="max-w-6xl mx-auto px-6 flex justify-between items-center text-xs sm:text-sm font-medium tracking-wide text-zinc-300">
+                  <a href="#home" className="hover:text-white transition-colors">刘伟豪</a>
+                  <div className="flex space-x-6 sm:space-x-8">
+                    <a href="#education" className="hover:text-white transition-colors hidden sm:block">教育背景</a>
+                    <a href="#skills" className="hover:text-white transition-colors">专业技能</a>
+                    <a href="#projects" className="hover:text-white transition-colors">科研项目</a>
+                    <a href="#competitions" className="hover:text-white transition-colors">竞赛获奖</a>
+                  </div>
+                </div>
+              </nav>
+
+              {/* 首屏 */}
+              <section id="home" className="relative min-h-[90vh] flex flex-col items-center justify-center pt-20 overflow-hidden px-6">
+                <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-black z-0"></div>
+                
+                <FadeInSection className="z-10 flex flex-col items-center text-center">
+                  <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-zinc-200 to-zinc-600">
+                    {PERSONAL_INFO.name}
+                  </h1>
+                  <p className="text-xl sm:text-2xl font-light text-zinc-400 mb-6 tracking-wide">
+                    {PERSONAL_INFO.title}
+                  </p>
+                  <p className="max-w-2xl text-zinc-500 mb-12 leading-relaxed">
+                    {PERSONAL_INFO.subtitle}
+                  </p>
+                  
+                  <div className="flex flex-wrap justify-center gap-4 text-sm text-zinc-400 font-medium">
+                    <span className="flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 backdrop-blur-sm">
+                      <i className="fa-solid fa-envelope"></i> {PERSONAL_INFO.email}
+                    </span>
+                    <span className="flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 backdrop-blur-sm">
+                      <i className="fa-solid fa-phone"></i> {PERSONAL_INFO.phone}
+                    </span>
+                    <span className="flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 backdrop-blur-sm">
+                      <i className="fa-solid fa-location-dot"></i> {PERSONAL_INFO.location}
+                    </span>
+                  </div>
+                </FadeInSection>
+
+                <a href="#skills" className="absolute bottom-10 z-10 animate-bounce text-zinc-600 hover:text-zinc-300 transition-colors">
+                  <i className="fa-solid fa-chevron-down text-3xl"></i>
+                </a>
+              </section>
+
+              {/* 专业技能 */}
+              <section id="skills" className="py-24 px-6 max-w-6xl mx-auto">
+                <FadeInSection>
+                  <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-12 text-center">综合发展与技能</h2>
+                </FadeInSection>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {SKILLS.map((skill, index) => (
+                    <FadeInSection key={index} delay={index * 100} className="bg-zinc-900/40 border border-zinc-800/60 p-6 rounded-3xl hover:bg-zinc-900/80 transition-all duration-300 group">
+                      <div className="bg-zinc-800/50 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 text-zinc-300 group-hover:scale-110 group-hover:text-white transition-all">
+                        {skill.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2 text-white">{skill.name}</h3>
+                      <p className="text-sm text-zinc-400 leading-relaxed">{skill.desc}</p>
+                    </FadeInSection>
+                  ))}
+                </div>
+              </section>
+
+              {/* 科研经历 */}
+              <section id="projects" className="py-24 px-6 max-w-6xl mx-auto">
+                <FadeInSection>
+                  <div className="flex items-center justify-center mb-16">
+                    <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">科研经历</h2>
+                  </div>
+                </FadeInSection>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {PROJECTS.map((project, index) => (
+                    <FadeInSection key={project.id} delay={index * 100}>
+                      <div 
+                        onClick={() => setSelectedProject(project)}
+                        className="group relative bg-zinc-900/40 border border-zinc-800/60 rounded-3xl p-8 cursor-pointer overflow-hidden hover:border-zinc-600/50 transition-all duration-500 h-full flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/0 via-zinc-800/0 to-zinc-800/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <div className="relative z-10 flex-grow">
+                          <div className="flex justify-between items-start mb-4">
+                            <span className="text-xs font-bold px-3 py-1 bg-zinc-800 text-zinc-300 rounded-full">
+                              {project.period}
+                            </span>
+                            <span className="text-xs font-medium px-3 py-1 border border-zinc-700 text-zinc-400 rounded-full">
+                              {project.role}
+                            </span>
+                          </div>
+                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
+                            {project.title}
+                          </h3>
+                          <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                            {project.shortDesc}
+                          </p>
+                        </div>
+                        
+                        <div className="relative z-10 mt-auto">
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {project.tags.map(tag => (
+                              <span key={tag} className="text-xs text-zinc-500 bg-black/50 px-2 py-1 rounded-md">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="flex items-center text-sm font-medium text-white group-hover:translate-x-2 transition-transform">
+                            查看详情 <i className="fa-solid fa-chevron-right text-sm ml-1"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </FadeInSection>
+                  ))}
+                </div>
+              </section>
+
+              {/* 教育与竞赛 */}
+              <section className="py-24 px-6 bg-zinc-900/20 border-y border-zinc-800/50">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+                  
+                  {/* 教育背景 */}
+                  <div id="education">
+                    <FadeInSection>
+                      <h2 className="text-2xl font-bold tracking-tight mb-8 flex items-center">
+                        <i className="fa-solid fa-graduation-cap text-2xl mr-3 text-zinc-400"></i>
+                        教育背景
+                      </h2>
+                    </FadeInSection>
+                    <div className="space-y-8 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-800 before:to-transparent">
+                      {EDUCATION.map((edu, index) => (
+                        <FadeInSection key={index} delay={index * 150} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                          <div className="flex items-center justify-center w-5 h-5 rounded-full border-4 border-black bg-zinc-600 group-hover:bg-white transition-colors shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2"></div>
+                          <div className="w-[calc(100%-2rem)] md:w-[calc(50%-2rem)] bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50 hover:border-zinc-700 transition-colors">
+                            <div className="flex justify-between flex-wrap gap-2 mb-2">
+                              <h3 className="font-bold text-white text-lg">{edu.school}</h3>
+                              <span className="text-sm text-zinc-500 font-medium">{edu.period}</span>
+                            </div>
+                            <div className="text-blue-400 text-sm font-medium mb-4">{edu.degree}</div>
+                            <ul className="space-y-2 text-sm text-zinc-400">
+                              {edu.details.map((detail, i) => (
+                                <li key={i} className="flex items-start">
+                                  <span className="mr-2 mt-1 w-1 h-1 bg-zinc-600 rounded-full shrink-0"></span>
+                                  <span className="leading-relaxed">{detail}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </FadeInSection>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 竞赛经历 */}
+                  <div id="competitions">
+                    <FadeInSection>
+                      <h2 className="text-2xl font-bold tracking-tight mb-8 flex items-center">
+                        <i className="fa-solid fa-trophy text-2xl mr-3 text-zinc-400"></i>
+                        竞赛获奖
+                      </h2>
+                    </FadeInSection>
+                    <div className="space-y-6">
+                      {COMPETITIONS.map((comp, index) => (
+                        <FadeInSection key={comp.id || index} delay={index * 150}>
+                          <div 
+                            onClick={() => setSelectedCompetition(comp)}
+                            className="bg-zinc-900/30 p-6 rounded-2xl border border-zinc-800/50 hover:bg-zinc-800/60 hover:border-zinc-600/50 transition-all cursor-pointer group"
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="font-bold text-white text-lg group-hover:text-amber-400 transition-colors pr-4">{comp.name}</h3>
+                              <i className="fa-solid fa-chevron-right text-lg text-zinc-600 group-hover:text-amber-400 transition-colors shrink-0"></i>
+                            </div>
+                            <div className="flex items-center gap-3 mb-4">
+                              <span className="text-xs font-semibold px-3 py-1 bg-gradient-to-r from-amber-500/20 to-amber-700/20 text-amber-400 rounded-full border border-amber-700/30">
+                                {comp.award}
+                              </span>
+                              <span className="text-xs text-zinc-500">{comp.period}</span>
+                            </div>
+                            <p className="text-sm text-zinc-400 leading-relaxed">{comp.desc}</p>
+                          </div>
+                        </FadeInSection>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+              {/* 页脚 */}
+              <footer className="py-12 border-t border-zinc-900 text-center text-zinc-500 text-sm">
+                <div className="flex justify-center items-center gap-6 mb-4">
+                  <a href={`mailto:${PERSONAL_INFO.email}`} className="hover:text-white transition-colors">Email</a>
+                  <span className="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                  <span>Phone: {PERSONAL_INFO.phone}</span>
+                </div>
+                <p>© 2026 {PERSONAL_INFO.name}. All rights reserved.</p>
+              </footer>
+
+              {/* 模态框 */}
+              {(selectedProject || selectedCompetition) && (() => {
+                const activeModal = selectedProject || selectedCompetition;
+                const isProject = !!selectedProject;
+                const close = () => {
+                  setSelectedProject(null);
+                  setSelectedCompetition(null);
+                  setPreviewFile(null);
+                };
+                
+                return (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12">
+                    <div 
+                      className="absolute inset-0 bg-black/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-300"
+                      onClick={close}
+                    ></div>
+                    
+                    <div className="relative w-full max-w-5xl h-[85vh] bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+                      
+                      {previewFile ? (
+                        <div className="absolute inset-0 z-50 bg-zinc-950 flex flex-col animate-in slide-in-from-right-8 duration-300">
+                          <div className="flex justify-between items-center p-4 sm:p-6 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md shrink-0">
+                            <button 
+                              onClick={() => setPreviewFile(null)} 
+                              className="flex items-center text-zinc-400 hover:text-white transition-colors px-3 py-2 rounded-xl hover:bg-zinc-800"
+                            >
+                              <i className="fa-solid fa-chevron-left text-lg mr-1"></i> 返回详情
+                            </button>
+                            <span className="text-sm sm:text-base font-bold text-zinc-300 truncate px-4">
+                              {previewFile.title}
+                            </span>
+                            <button 
+                              onClick={close}
+                              className="p-2 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors"
+                            >
+                              <i className="fa-solid fa-xmark text-2xl"></i>
+                            </button>
+                          </div>
+                          <div className="flex-grow relative bg-black flex items-center justify-center overflow-hidden">
+                            {previewFile.type === 'pdf' && (
+                              <iframe src={previewFile.url} className="w-full h-full border-none bg-zinc-900" title={previewFile.title}></iframe>
+                            )}
+                            {previewFile.type === 'video' && (
+                              <video src={previewFile.url} controls autoPlay className="w-full h-full max-h-full outline-none"></video>
+                            )}
+                            {previewFile.type === 'image' && (
+                              <img src={previewFile.url} alt={previewFile.title} className="max-w-full max-h-full object-contain" />
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex justify-between items-start p-6 sm:p-8 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-10 shrink-0">
+                            <div>
+                              <span className={`text-xs font-bold tracking-wider mb-2 block uppercase ${isProject ? 'text-blue-400' : 'text-amber-400'}`}>
+                                {activeModal.role || activeModal.award} · {activeModal.period}
+                              </span>
+                              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight pr-8">
+                                {activeModal.title || activeModal.name}
+                              </h2>
+                            </div>
+                            <button 
+                              onClick={close}
+                              className="absolute right-6 top-6 sm:right-8 sm:top-8 p-2 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors"
+                            >
+                              <i className="fa-solid fa-xmark text-2xl"></i>
+                            </button>
+                          </div>
+                          
+                          <div className="p-6 sm:p-8 overflow-y-auto flex-grow">
+                            <div className="prose prose-invert max-w-none">
+                              {typeof activeModal.richDetails === 'function' 
+                                ? activeModal.richDetails(setPreviewFile) 
+                                : activeModal.richDetails}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+            </div>
+          );
+        }
+
+        // 挂载React应用
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

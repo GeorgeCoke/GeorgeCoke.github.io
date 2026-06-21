@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, noarchive">
+    <title>论文在线预览</title>
+    <style>
+        :root { color-scheme: dark; --bar: #111815; --panel: #202824; --line: #3f4b45; --muted: #c8d2cd; --accent: #80cdb2; }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; min-height: 100%; background: #252c28; color: #fff; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+        button, a { font: inherit; }
+        .viewer-bar { position: sticky; top: 0; z-index: 10; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: .75rem clamp(.75rem, 2vw, 1.5rem); background: rgba(17, 24, 21, .96); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+        .viewer-title { min-width: 0; }
+        .viewer-title a { color: var(--accent); text-decoration: none; }
+        .viewer-title h1 { margin: .25rem 0 0; overflow: hidden; color: #fff; font-size: clamp(.9rem, 2vw, 1.05rem); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+        .viewer-controls { display: flex; align-items: center; gap: .45rem; }
+        .viewer-controls button { min-width: 40px; min-height: 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: #fff; cursor: pointer; }
+        .viewer-controls button:hover, .viewer-controls button:focus-visible { border-color: var(--accent); color: var(--accent); }
+        .viewer-controls button:disabled { cursor: not-allowed; opacity: .45; }
+        .page-counter { min-width: 82px; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .viewer-note { padding: .55rem 1rem; background: #19211d; color: var(--muted); text-align: center; font-size: .82rem; }
+        .viewer-stage { display: grid; min-height: calc(100vh - 120px); padding: clamp(1rem, 3vw, 2rem); place-items: start center; overflow: auto; }
+        #pdf-canvas { max-width: 100%; height: auto; background: #fff; box-shadow: 0 14px 50px rgba(0, 0, 0, .35); }
+        .viewer-status { padding: 4rem 1rem; color: var(--muted); text-align: center; }
+        .viewer-status.is-error { color: #ffb8b1; }
+        @media (max-width: 680px) {
+            .viewer-bar { grid-template-columns: 1fr; }
+            .viewer-controls { justify-content: center; }
+            .viewer-title h1 { white-space: normal; }
+        }
+        @media print { body { display: none !important; } }
+    </style>
+</head>
+<body>
+    <header class="viewer-bar">
+        <div class="viewer-title">
+            <a href="index.html#publications">← 返回论文成果</a>
+            <h1 id="document-title">论文在线预览</h1>
+        </div>
+        <div class="viewer-controls" aria-label="PDF 翻页和缩放">
+            <button id="prev-page" type="button" aria-label="上一页">←</button>
+            <span class="page-counter"><span id="page-number">1</span> / <span id="page-count">-</span></span>
+            <button id="next-page" type="button" aria-label="下一页">→</button>
+            <button id="zoom-out" type="button" aria-label="缩小">−</button>
+            <button id="zoom-in" type="button" aria-label="放大">+</button>
+        </div>
+    </header>
+    <div class="viewer-note">仅供个人学术主页在线阅读。公开网络内容无法绝对禁止截图或技术性保存。</div>
+    <main class="viewer-stage">
+        <div id="viewer-status" class="viewer-status" role="status">正在安全加载论文预览…</div>
+        <canvas id="pdf-canvas" aria-label="PDF 当前页面" hidden></canvas>
+    </main>
+    <noscript><div class="viewer-status is-error">在线预览需要启用 JavaScript。</div></noscript>
+    <script type="module" src="assets/js/static-viewer.js"></script>
+</body>
+</html>
